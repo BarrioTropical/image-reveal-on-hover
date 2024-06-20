@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            background: #d3d0bd;
+            color: #272525;
+        }
+
+        .preview{
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            overflow: hidden;
+            pointer-events: none;
+            transform-origin: center;
+            transform: scale(0);
+            transition: transform 0.3s;
+            z-index: 2;
+        }
+
+        .preview-img{
+            width: 100%;
+            height: 100%;
+            background: url(https://images.pexels.com/photos/18374429/pexels-photo-18374429/free-photo-of-parete-muro-collina-lampada.jpeg);
+            background-size: cover;
+            background-position: 0 0;
+            pointer-events: none;
+            transition: background-position 0.4s;
+        }
+
+        p{
+            font-size: 14px;
+            text-transform: uppercase;
+            line-height: 100%;
+        }
+
+        #header p{
+            opacity: 0.5;
+        }
+
+        .container{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .projects{
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project{
+            width: 100%;
+            padding: 2.5em 1em;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            cursor: pointer;
+        }
+
+        .project > div{
+            flex: 3;
+        }
+
+        .project div:last-child{
+            flex: 1;
+        }
+
+        @media (max-width: 900px){
+            .location,
+            .service{
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="preview">
+        <div class="preview-img"></div>
+    </div>
+
+    <div class="container">
+        <div class="projects">
+
+            <div class="project" id="header">
+                <div class="client">
+                    <p>Project</p>
+                </div>
+                <div class="location">
+                    <p>Location</p>
+                </div>
+                <div class="service">
+                    <p>Category</p>
+                </div>
+                <div class="year">
+                    <p>Year</p>
+                </div>
+            </div>
+
+            <div class="project" id="p1">
+                <div class="client">
+                    <p>Project 01</p>
+                </div>
+                <div class="location">
+                    <p>Location 01</p>
+                </div>
+                <div class="service">
+                    <p>Category 01</p>
+                </div>
+                <div class="year">
+                    <p>Year 01</p>
+                </div>
+            </div>
+
+            <div class="project" id="p2">
+                <div class="client">
+                    <p>Project 02</p>
+                </div>
+                <div class="location">
+                    <p>Location 02</p>
+                </div>
+                <div class="service">
+                    <p>Category 02</p>
+                </div>
+                <div class="year">
+                    <p>Year 02</p>
+                </div>
+            </div>
+
+            <div class="project" id="p3">
+                <div class="client">
+                    <p>Project 03</p>
+                </div>
+                <div class="location">
+                    <p>Location 03</p>
+                </div>
+                <div class="service">
+                    <p>Category 03</p>
+                </div>
+                <div class="year">
+                    <p>Year 03</p>
+                </div>
+            </div>
+
+            <div class="project" id="p4">
+                <div class="client">
+                    <p>Project 04</p>
+                </div>
+                <div class="location">
+                    <p>Location 04</p>
+                </div>
+                <div class="service">
+                    <p>Category 04</p>
+                </div>
+                <div class="year">
+                    <p>Year 04</p>
+                </div>
+            </div>
+
+            <div class="project" id="p5">
+                <div class="client">
+                    <p>Project 05</p>
+                </div>
+                <div class="location">
+                    <p>Location 05</p>
+                </div>
+                <div class="service">
+                    <p>Category 05</p>
+                </div>
+                <div class="year">
+                    <p>Year 05</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projects = document.querySelector(".projects");
+        const preview = document.querySelector(".preview");
+        const previewImg = document.querySelector(".preview-img");
+
+        let isInside = false;
+
+        const bgPosition = {
+            p1: "0 0",
+            p2: "0 25%",
+            p3: "0 50%",
+            p4: "0 75%",
+            p5: "0 100%",
+        }
+
+        const moveStuff = (e) => {
+            const mouseInside = isMouseInsideContainer(e);
+
+            if (mouseInside !== isInside) {
+                isInside = mouseInside;
+
+                if (isInside) {
+                    preview.style.transform = 'scale(1)';
+                } else {
+                    preview.style.transform = 'scale(0)';
+                }
+            }
+        };
+
+        const moveProject = (e) => {
+            const previewRect = preview.getBoundingClientRect();
+            const offsetX = previewRect.width / 2;
+            const offsetY = previewRect.height / 2;
+
+            preview.style.left = e.pageX - offsetX + "px";
+            preview.style.top = e.pageY - offsetY + "px";
+        };
+
+        const moveProjectImg = (project) => {
+            const projectId = project.id;
+            previewImg.style.backgroundPosition = bgPosition[projectId] || "0 0";
+        };
+
+        const isMouseInsideContainer = (e) => {
+            const containerRect = projects.getBoundingClientRect();
+            return (
+                e.pageX >= containerRect.left &&
+                e.pageX <= containerRect.right &&
+                e.pageY >= containerRect.top &&
+                e.pageY <= containerRect.bottom
+            );
+        };
+
+        window.addEventListener("mousemove", moveStuff);
+
+        Array.from(projects.children).forEach((project) => {
+            project.addEventListener("mousemove", moveProject);
+            project.addEventListener("mousemove", moveProjectImg.bind(null, project));
+        });
+
+    </script>
+</body>
+</html>
